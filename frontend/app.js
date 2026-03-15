@@ -11,7 +11,8 @@
     map: null,
     mapLoaded: false,
     pendingDataset: null,
-    selectedStationId: null
+    selectedStationId: null,
+    stationMarkerSizer: null
   };
 
   var elements = {
@@ -46,11 +47,13 @@
       touchZoomRotate: false
     });
 
+    appState.stationMarkerSizer = createMarkerSizer(map);
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
 
     map.on("load", function () {
       appState.mapLoaded = true;
       ensureStationLayer(map);
+      appState.stationMarkerSizer.refresh();
       if (appState.pendingDataset) {
         applyDatasetToMap(appState.pendingDataset);
         appState.pendingDataset = null;
@@ -98,17 +101,10 @@
         type: "circle",
         source: STATION_SOURCE_ID,
         paint: {
-          "circle-radius": [
-            "interpolate",
-            ["linear"],
-            ["zoom"],
-            8, 3.4,
-            10, 4.8,
-            12, 6.4
-          ],
+          "circle-radius": 2.4,
           "circle-color": "#132126",
           "circle-stroke-color": "#fff9ef",
-          "circle-stroke-width": 1.3,
+          "circle-stroke-width": 0.9,
           "circle-opacity": 0.92
         }
       });
@@ -253,8 +249,23 @@
       center: [dataset.camera.center.lon, dataset.camera.center.lat],
       zoom: dataset.camera.zoom
     });
+    appState.stationMarkerSizer.setStations(dataset.stations);
 
     renderSelection(null);
+  }
+
+  /** Create the station marker sizing controller expected by the map layer. */
+  function createMarkerSizer(map) {
+    if (
+      !window.TubeStationMarkerSizer ||
+      typeof window.TubeStationMarkerSizer.createStationMarkerSizer !== "function"
+    ) {
+      throw new Error("Station marker sizing helpers were unavailable.");
+    }
+
+    return window.TubeStationMarkerSizer.createStationMarkerSizer(map, {
+      layerId: STATION_LAYER_ID
+    });
   }
 
   function renderDatasetMeta(dataset) {

@@ -98,6 +98,7 @@ Organize the frontend into a few clear pieces:
 - `station-layer`
   - converts station data into a single GeoJSON source
   - renders markers as a circle layer
+  - delegates adaptive marker sizing to a small helper so viewport-density math stays out of page state code
 - `map-overlays`
   - renders title, loading state, fetch errors, and generated-at metadata
 
@@ -183,7 +184,7 @@ Render stations through one GeoJSON source and one circle layer:
 
 - source data: all stations from `/api/map/stations`
 - layer type: `circle`
-- circle radius: small but tappable
+- circle radius: small at network-wide zooms, then scaled from both zoom level and visible station density
 - circle color: a single high-contrast neutral or brand accent
 - circle stroke: thin contrasting outline for visibility on mixed basemap tones
 

@@ -43,6 +43,8 @@ Anything outside that scope is out of view for this map element, including buses
 - Interchange stations should appear once, even if they serve multiple scoped modes.
 - Each marker should be anchored to the station's canonical latitude and longitude from TfL stop point data.
 - Marker styling should be minimal and consistent in v1: a small high-contrast dot with a thin outline so it remains visible on light or dark basemap areas.
+- Marker radius should stay restrained at wider zoom levels so dense central areas do not collapse into a solid field of dots.
+- Marker radius should grow as the visible station density drops while zooming in, preserving station legibility without overpowering the basemap.
 - Selected and hovered markers can be differentiated later, but the first version only needs a default marker state.
 
 ### 3. Basic Navigation
@@ -129,6 +131,7 @@ type RailStationMapPoint = {
 - On desktop, the map should occupy enough width and height to feel like a primary surface, not a thumbnail.
 - On mobile, the map should still allow pan and zoom without accidental control overlap.
 - Marker size should remain tappable on touch screens without becoming visually heavy on desktop.
+- Marker sizing should respond to both zoom level and how many stations are currently visible in the viewport, rather than using a fixed radius curve alone.
 - Control placement should avoid safe-area collisions and remain reachable with one hand on mobile.
 
 ## Performance Notes
