@@ -4,6 +4,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse
 
 from backend.src.app.container import build_container
+from backend.src.routes.http_response import HttpResponse
 
 
 LOGGER = logging.getLogger(__name__)
@@ -20,11 +21,11 @@ class AppRequestHandler(BaseHTTPRequestHandler):
 
     def _dispatch(self, write_body: bool) -> None:
         parsed = urlparse(self.path)
-        status_code, headers, payload = self.server.router.dispatch("GET", parsed.path)  # type: ignore[attr-defined]
-        body = payload if isinstance(payload, bytes) else json.dumps(payload).encode("utf-8")
+        response: HttpResponse = self.server.router.dispatch("GET", parsed.path)  # type: ignore[attr-defined]
+        body = response.body if isinstance(response.body, bytes) else json.dumps(response.body).encode("utf-8")
 
-        self.send_response(status_code)
-        for header_name, header_value in headers.items():
+        self.send_response(response.status_code)
+        for header_name, header_value in response.headers.items():
             self.send_header(header_name, header_value)
         self.send_header("Content-Length", str(len(body)))
         self.end_headers()

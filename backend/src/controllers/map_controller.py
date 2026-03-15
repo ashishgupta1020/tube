@@ -1,4 +1,5 @@
 from backend.src.config.settings import Settings
+from backend.src.routes.http_response import HttpResponse, json_response, service_unavailable_response
 from backend.src.services.map_service import MapService, ServiceUnavailableError
 
 
@@ -7,33 +8,15 @@ class MapController:
         self._map_service = map_service
         self._settings = settings
 
-    def get_map_stations(self) -> tuple[int, dict[str, str], dict]:
+    def get_map_stations(self) -> HttpResponse:
         try:
-            payload = self._map_service.get_map_stations_response()
-            return (
+            return json_response(
                 200,
-                {
-                    "Content-Type": "application/json; charset=utf-8",
-                    "Cache-Control": self._settings.response_cache_control,
-                },
-                payload,
+                self._map_service.get_map_stations_dataset().to_response_dict(),
+                cache_control=self._settings.response_cache_control,
             )
         except ServiceUnavailableError as exc:
-            return (
-                503,
-                {
-                    "Content-Type": "application/json; charset=utf-8",
-                    "Cache-Control": "no-store",
-                },
-                {"error": str(exc)},
-            )
+            return service_unavailable_response(str(exc))
 
-    def get_health(self) -> tuple[int, dict[str, str], dict]:
-        return (
-            200,
-            {
-                "Content-Type": "application/json; charset=utf-8",
-                "Cache-Control": "no-store",
-            },
-            {"status": "ok"},
-        )
+    def get_health(self) -> HttpResponse:
+        return json_response(200, {"status": "ok"})

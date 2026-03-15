@@ -13,12 +13,12 @@ class FrontendControllerTest(unittest.TestCase):
 
             controller = FrontendController(root)
 
-            status, headers, body = controller.get_index()
+            response = controller.get_index()
 
-            self.assertEqual(200, status)
-            self.assertEqual("text/html; charset=utf-8", headers["Content-Type"])
-            self.assertEqual("no-cache", headers["Cache-Control"])
-            self.assertIn(b"<title>tube</title>", body)
+            self.assertEqual(200, response.status_code)
+            self.assertEqual("text/html; charset=utf-8", response.headers["Content-Type"])
+            self.assertEqual("no-cache", response.headers["Cache-Control"])
+            self.assertIn(b"<title>tube</title>", response.body)
 
     def test_get_asset_blocks_path_traversal(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -29,11 +29,11 @@ class FrontendControllerTest(unittest.TestCase):
 
             controller = FrontendController(root)
 
-            status, headers, body = controller.get_asset("../outside.txt")
+            response = controller.get_asset("../outside.txt")
 
-            self.assertEqual(404, status)
-            self.assertEqual("application/json; charset=utf-8", headers["Content-Type"])
-            self.assertEqual({"error": "not found"}, body)
+            self.assertEqual(404, response.status_code)
+            self.assertEqual("application/json; charset=utf-8", response.headers["Content-Type"])
+            self.assertEqual({"error": "not found"}, response.body)
 
 
 if __name__ == "__main__":

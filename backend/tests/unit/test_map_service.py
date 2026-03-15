@@ -58,8 +58,10 @@ class MapServiceTest(unittest.TestCase):
             station_repository=InMemoryStationRepository(),
         )
 
-        response = service.get_map_stations_response()
+        dataset = service.get_map_stations_dataset()
+        response = dataset.to_response_dict()
 
+        self.assertEqual("v1", dataset.version)
         self.assertEqual("v1", response["version"])
         self.assertEqual(1, len(response["stations"]))
         self.assertEqual("HUBBAN", response["stations"][0]["id"])
@@ -75,7 +77,7 @@ class MapServiceTest(unittest.TestCase):
             station_repository=repository,
         )
 
-        service.get_map_stations_response()
+        service.get_map_stations_dataset()
         dataset = repository.get()
         assert dataset is not None
         expired_dataset = replace(
@@ -86,7 +88,7 @@ class MapServiceTest(unittest.TestCase):
         repository.save(expired_dataset)
         client.raise_error = True
 
-        response = service.get_map_stations_response()
+        response = service.get_map_stations_dataset().to_response_dict()
 
         self.assertEqual(1, len(response["stations"]))
 
@@ -100,7 +102,7 @@ class MapServiceTest(unittest.TestCase):
             station_repository=repository,
         )
 
-        service.get_map_stations_response()
+        service.get_map_stations_dataset()
         dataset = repository.get()
         assert dataset is not None
         expired_dataset = replace(
@@ -112,7 +114,7 @@ class MapServiceTest(unittest.TestCase):
         client.raise_error = True
 
         with self.assertRaises(ServiceUnavailableError):
-            service.get_map_stations_response()
+            service.get_map_stations_dataset()
 
     def test_background_refresh_keeps_stale_dataset_without_raising(self) -> None:
         client = FakeTflClient(self.stop_points)
@@ -124,7 +126,7 @@ class MapServiceTest(unittest.TestCase):
             station_repository=repository,
         )
 
-        service.get_map_stations_response()
+        service.get_map_stations_dataset()
         dataset = repository.get()
         assert dataset is not None
         expired_dataset = replace(
