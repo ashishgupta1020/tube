@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tube</title>
+    <link rel="stylesheet" href="/vendor/maplibre-gl.css" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <div class="ambient ambient-west" aria-hidden="true"></div>
+      <div class="ambient ambient-east" aria-hidden="true"></div>
+
+      <header class="topbar">
+        <div class="brand-card">
+          <p class="eyebrow">London rail map</p>
+          <h1>Tube</h1>
+          <p class="summary">
+            A station-first view of Underground, DLR, Overground, and the Elizabeth line.
+          </p>
+        </div>
+
+        <div class="meta-stack">
+          <div class="status-chip" id="dataset-status">Connecting to backend…</div>
+          <div class="meta-card">
+            <p class="meta-label">Latest dataset</p>
+            <p class="meta-value" id="generated-at">Waiting for station data</p>
+          </div>
+        </div>
+      </header>
+
+      <main class="map-stage">
+        <section
+          class="map-card"
+          aria-label="Map of London rail stations"
+        >
+          <div id="map" class="map-canvas" role="application"></div>
+
+          <div class="map-panel map-panel-top" id="map-panel-top">
+            <p class="panel-kicker">Station density</p>
+            <p class="panel-value" id="station-count">Loading…</p>
+            <p class="panel-copy">Every marker is a backend-normalized station.</p>
+          </div>
+
+          <div class="map-panel map-panel-bottom" id="map-panel-bottom">
+            <p class="panel-kicker">Selection</p>
+            <p class="panel-value" id="selection-name">None</p>
+            <p class="panel-copy" id="selection-copy">Select a station to inspect its modes.</p>
+          </div>
+
+          <div class="state-overlay" id="state-overlay" aria-live="polite">
+            <div class="state-card">
+              <p class="state-kicker" id="state-kicker">Loading map</p>
+              <h2 id="state-title">Fetching station data from the backend.</h2>
+              <p id="state-copy">The map will render as soon as the current dataset arrives.</p>
+              <button class="retry-button" id="retry-button" type="button" hidden>Retry</button>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="/vendor/maplibre-gl.js"></script>
+    <script src="/app.js"></script>
+  </body>
+</html>

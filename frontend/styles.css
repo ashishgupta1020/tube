@@ -1,0 +1,329 @@
+:root {
+  --page-bg: #f3eadb;
+  --ink: #152226;
+  --ink-soft: rgba(21, 34, 38, 0.74);
+  --line: rgba(21, 34, 38, 0.12);
+  --panel: rgba(252, 248, 241, 0.84);
+  --panel-strong: rgba(255, 252, 246, 0.94);
+  --accent: #d86b4b;
+  --accent-deep: #8e3d27;
+  --marker-fill: #132126;
+  --marker-stroke: #fff9ef;
+  --shadow: 0 24px 60px rgba(80, 56, 40, 0.16);
+  --font-display: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+  --font-body: "Avenir Next", "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  background:
+    radial-gradient(circle at top left, rgba(216, 107, 75, 0.16), transparent 32rem),
+    radial-gradient(circle at 85% 14%, rgba(38, 94, 96, 0.14), transparent 28rem),
+    linear-gradient(180deg, #fbf3e8 0%, #efe4d4 100%);
+  color: var(--ink);
+  font-family: var(--font-body);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+.app-shell {
+  min-height: 100vh;
+  min-height: 100svh;
+  padding: 24px;
+  position: relative;
+}
+
+.ambient {
+  border-radius: 999px;
+  filter: blur(12px);
+  pointer-events: none;
+  position: fixed;
+  z-index: 0;
+}
+
+.ambient-west {
+  background: rgba(216, 107, 75, 0.13);
+  height: 18rem;
+  left: -4rem;
+  top: 10rem;
+  width: 18rem;
+}
+
+.ambient-east {
+  background: rgba(38, 94, 96, 0.12);
+  height: 22rem;
+  right: -5rem;
+  top: 3rem;
+  width: 22rem;
+}
+
+.topbar,
+.map-stage {
+  margin: 0 auto;
+  max-width: 1480px;
+  position: relative;
+  z-index: 1;
+}
+
+.topbar {
+  align-items: start;
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.brand-card,
+.meta-card,
+.status-chip,
+.map-panel,
+.state-card {
+  backdrop-filter: blur(18px);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+
+.brand-card {
+  border-radius: 24px;
+  max-width: 620px;
+  padding: 18px 22px 20px;
+}
+
+.eyebrow,
+.meta-label,
+.panel-kicker,
+.state-kicker {
+  color: var(--ink-soft);
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  margin: 0 0 6px;
+  text-transform: uppercase;
+}
+
+.brand-card h1,
+.state-card h2,
+.panel-value,
+.meta-value {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.brand-card h1 {
+  font-size: clamp(2.3rem, 6vw, 4.8rem);
+  line-height: 0.92;
+}
+
+.summary,
+.panel-copy,
+#state-copy {
+  color: var(--ink-soft);
+  margin: 10px 0 0;
+  max-width: 48ch;
+}
+
+.meta-stack {
+  display: grid;
+  gap: 12px;
+  justify-items: end;
+}
+
+.status-chip {
+  border-radius: 999px;
+  color: var(--accent-deep);
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 10px 16px;
+}
+
+.meta-card {
+  border-radius: 18px;
+  min-width: 220px;
+  padding: 14px 16px;
+}
+
+.meta-value {
+  font-size: 1.05rem;
+  line-height: 1.1;
+}
+
+.map-stage {
+  min-height: calc(100vh - 170px);
+  min-height: calc(100svh - 170px);
+}
+
+.map-card {
+  border: 1px solid rgba(21, 34, 38, 0.2);
+  border-radius: 30px;
+  box-shadow: 0 24px 90px rgba(64, 42, 31, 0.18);
+  min-height: calc(100vh - 170px);
+  min-height: calc(100svh - 170px);
+  overflow: hidden;
+  position: relative;
+}
+
+.map-canvas {
+  background:
+    linear-gradient(180deg, rgba(241, 232, 219, 0.86), rgba(227, 215, 199, 0.96)),
+    linear-gradient(135deg, rgba(38, 94, 96, 0.08), transparent 52%);
+  height: 100%;
+  min-height: inherit;
+  width: 100%;
+}
+
+.map-panel {
+  border-radius: 18px;
+  max-width: 320px;
+  padding: 14px 16px;
+  position: absolute;
+  z-index: 3;
+}
+
+.map-panel-top {
+  left: max(16px, env(safe-area-inset-left));
+  top: max(16px, env(safe-area-inset-top));
+}
+
+.map-panel-bottom {
+  bottom: max(16px, env(safe-area-inset-bottom));
+  left: max(16px, env(safe-area-inset-left));
+}
+
+.panel-value {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.state-overlay {
+  align-items: center;
+  display: flex;
+  inset: 0;
+  justify-content: center;
+  padding: 24px;
+  pointer-events: none;
+  position: absolute;
+  transition: opacity 180ms ease;
+  z-index: 4;
+}
+
+.state-overlay.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.state-card {
+  border-radius: 24px;
+  max-width: 480px;
+  padding: 22px 24px;
+  pointer-events: auto;
+}
+
+.state-card h2 {
+  font-size: clamp(1.6rem, 3.2vw, 2.4rem);
+  line-height: 0.98;
+}
+
+.retry-button {
+  background: var(--ink);
+  border: 0;
+  border-radius: 999px;
+  color: #fef8ef;
+  cursor: pointer;
+  margin-top: 16px;
+  padding: 11px 18px;
+}
+
+.retry-button:hover {
+  background: #203238;
+}
+
+.maplibregl-ctrl-top-right {
+  right: max(12px, env(safe-area-inset-right));
+  top: max(12px, env(safe-area-inset-top));
+}
+
+.maplibregl-ctrl-group {
+  border: 1px solid rgba(21, 34, 38, 0.16);
+  border-radius: 14px;
+  box-shadow: 0 16px 34px rgba(42, 31, 24, 0.16);
+}
+
+.maplibregl-ctrl-group button {
+  height: 34px;
+  width: 34px;
+}
+
+.maplibregl-ctrl-bottom-right {
+  bottom: max(8px, env(safe-area-inset-bottom));
+  right: max(8px, env(safe-area-inset-right));
+}
+
+@media (max-width: 900px) {
+  .app-shell {
+    padding: 14px;
+  }
+
+  .topbar {
+    flex-direction: column;
+  }
+
+  .meta-stack {
+    justify-items: start;
+  }
+
+  .map-stage,
+  .map-card {
+    min-height: calc(100vh - 220px);
+    min-height: calc(100svh - 220px);
+  }
+
+  .map-panel {
+    max-width: min(280px, calc(100% - 28px));
+  }
+
+  .map-panel-bottom {
+    bottom: max(64px, env(safe-area-inset-bottom));
+  }
+}
+
+@media (max-width: 640px) {
+  .brand-card {
+    padding: 16px 18px 18px;
+  }
+
+  .status-chip,
+  .meta-card,
+  .map-panel,
+  .state-card {
+    backdrop-filter: blur(14px);
+  }
+
+  .map-panel-top {
+    top: auto;
+    bottom: max(148px, env(safe-area-inset-bottom));
+  }
+
+  .map-panel-bottom {
+    max-width: calc(100% - 28px);
+  }
+
+  .panel-value {
+    font-size: 1.28rem;
+  }
+}

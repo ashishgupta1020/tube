@@ -13,16 +13,23 @@ class AppRequestHandler(BaseHTTPRequestHandler):
     server_version = "TubeBackend/0.1"
 
     def do_GET(self) -> None:
+        self._dispatch(write_body=True)
+
+    def do_HEAD(self) -> None:
+        self._dispatch(write_body=False)
+
+    def _dispatch(self, write_body: bool) -> None:
         parsed = urlparse(self.path)
         status_code, headers, payload = self.server.router.dispatch("GET", parsed.path)  # type: ignore[attr-defined]
-        body = json.dumps(payload).encode("utf-8")
+        body = payload if isinstance(payload, bytes) else json.dumps(payload).encode("utf-8")
 
         self.send_response(status_code)
         for header_name, header_value in headers.items():
             self.send_header(header_name, header_value)
         self.send_header("Content-Length", str(len(body)))
         self.end_headers()
-        self.wfile.write(body)
+        if write_body:
+            self.wfile.write(body)
 
     def log_message(self, format: str, *args) -> None:
         LOGGER.info("%s - %s", self.address_string(), format % args)

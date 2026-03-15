@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from backend.src.controllers.frontend_controller import FrontendController
+from backend.src.config.paths import FRONTEND_DIR
 from backend.src.config.settings import Settings, load_settings
 from backend.src.controllers.map_controller import MapController
 from backend.src.integrations.tfl.client import TflClient
@@ -17,6 +19,7 @@ class AppContainer:
     settings: Settings
     map_service: MapService
     map_controller: MapController
+    frontend_controller: FrontendController
     router: Router
     refresh_job: StationRefreshJob
 
@@ -33,12 +36,14 @@ def build_container(settings: Settings | None = None) -> AppContainer:
         station_repository=repository,
     )
     map_controller = MapController(map_service, config)
-    router = Router(map_controller)
+    frontend_controller = FrontendController(FRONTEND_DIR)
+    router = Router(map_controller, frontend_controller)
     refresh_job = StationRefreshJob(map_service, config)
     return AppContainer(
         settings=config,
         map_service=map_service,
         map_controller=map_controller,
+        frontend_controller=frontend_controller,
         router=router,
         refresh_job=refresh_job,
     )
